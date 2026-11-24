@@ -266,10 +266,15 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 /* ---------- phones ---------- */
 @media (max-width: 720px) {
-  .seq-stick canvas { height: auto; aspect-ratio: 1470 / 630; top: 10px; bottom: auto; object-fit: contain; transform: scale(1.14); transform-origin: 50% 40%; -webkit-mask-image: none; mask-image: none; }
-  .seq-stick::after { background: linear-gradient(180deg, transparent 22%, rgba(6,7,8,.92) 40%); }
+  /* one composition: the car sits behind the headline, text floats over it */
+  .seq-stick { height: 560px; min-height: 0; }
+  .seq-stick canvas { left: 50%; right: auto; top: 10%; bottom: auto; width: 168%; height: auto; aspect-ratio: 1470 / 630; object-fit: contain; transform: translateX(-50%); -webkit-mask-image: none; mask-image: none; }
+  .seq-stick::after { background: linear-gradient(180deg, #060708 0%, #060708 11%, rgba(6,7,8,0) 27%, rgba(6,7,8,0) 38%, rgba(6,7,8,.97) 62%, #060708 100%), radial-gradient(60% 40% at 50% 36%, rgba(47,107,255,.16), transparent 70%); }
+  .seq-in { height: 100%; }
+  .chap { top: auto; bottom: 26px; left: 22px; right: 22px; }
+  .chap h1 { color: rgba(242,244,247,.92); text-shadow: 0 2px 22px rgba(6,7,8,.55); }
+  .chap .lead { color: rgba(214,221,232,.9); }
   .seq-nav { display: none; }
-  .seq-stick { min-height: 640px; }
 }
 @media (max-width: 620px) {
   .cards4[style] { grid-template-columns: 1fr !important; }
