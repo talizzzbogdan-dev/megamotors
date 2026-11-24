@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Megamotors</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%22-14%20-12%20148%2086%22%3E%3Crect%20x%3D%22-14%22%20y%3D%22-12%22%20width%3D%22148%22%20height%3D%2286%22%20rx%3D%2218%22%20fill%3D%22%23060708%22/%3E%3Cdefs%3E%3CclipPath%20id%3D%22t%22%3E%3Cpolygon%20points%3D%22-20%2C-5%20140%2C-5%20140%2C30%20-20%2C40%22/%3E%3C/clipPath%3E%3CclipPath%20id%3D%22b%22%3E%3Cpolygon%20points%3D%22-20%2C43.2%20140%2C33.2%20140%2C80%20-20%2C80%22/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20transform%3D%22translate%2816%200%29%20skewX%28-16%29%22%3E%3Cg%20clip-path%3D%22url%28%23b%29%22%3E%3Cpolygon%20points%3D%224%2C60%204%2C4%2022%2C4%2050%2C34%2078%2C4%2096%2C4%2096%2C60%2080%2C60%2080%2C28%2054%2C56%2046%2C56%2020%2C28%2020%2C60%22%20fill%3D%22%232f6bff%22/%3E%3C/g%3E%3Cg%20clip-path%3D%22url%28%23t%29%22%3E%3Cpolygon%20points%3D%224%2C60%204%2C4%2022%2C4%2050%2C34%2078%2C4%2096%2C4%2096%2C60%2080%2C60%2080%2C28%2054%2C56%2046%2C56%2020%2C28%2020%2C60%22%20fill%3D%22%23fff%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Oswald:wght@400;500;600;700&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
@@ -67,8 +68,8 @@ header.top { position: sticky; top: 0; z-index: 60; background: var(--header-bg)
 .logo svg { height: 34px; width: auto; flex: none; }
 .logo .wm { display: flex; flex-direction: column; line-height: 1; }
 .logo .wm b { font-family: "Syncopate", var(--font-display); font-weight: 700; font-size: 17px; letter-spacing: .12em; }
-.logo .wm b em { font-style: normal; font-weight: 400; color: var(--accent-soft); }
-.logo svg { height: 38px; }
+.logo .wm b em { font-style: normal; font-weight: 700; color: var(--accent); }
+.logo svg { height: 34px; }
 .logo .wm small { font-size: 9px; letter-spacing: .34em; color: var(--muted); margin-top: 5px; text-transform: uppercase; }
 .theme { width: 42px; height: 42px; border: 1px solid var(--line); background: transparent; color: var(--text); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; padding: 0; flex: none; }
 .theme:hover { border-color: var(--accent); }
@@ -310,11 +311,16 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 <header class="top">
   <div class="wrap bar">
     <a class="logo" href="#top" aria-label="Megamotors, на главную">
-      <svg viewBox="0 0 64 40" aria-hidden="true">
-        <path d="M0 40 L9 0 H21 L32 22 L43 0 H55 L64 40 H52 L48 17 L36 40 H28 L16 17 L12 40Z" fill="url(#lg)"/>
-        <path d="M44 0 H55 L57 9 Z" fill="#2f6bff"/>
-        <path d="M-2 31 L66 5" style="stroke:var(--bg)" stroke-width="3"/>
-      </svg>
+      <svg viewBox="-4 0 124 62" aria-hidden="true">
+<defs>
+<clipPath id="mt"><polygon points="-20,-5 140,-5 140,30 -20,40"/></clipPath>
+<clipPath id="mb"><polygon points="-20,43.2 140,33.2 140,80 -20,80"/></clipPath>
+</defs>
+<g transform="translate(16 0) skewX(-16)">
+<g clip-path="url(#mb)"><polygon points="4,60 4,4 22,4 50,34 78,4 96,4 96,60 80,60 80,28 54,56 46,56 20,28 20,60" fill="var(--accent)"/></g>
+<g clip-path="url(#mt)"><polygon points="4,60 4,4 22,4 50,34 78,4 96,4 96,60 80,60 80,28 54,56 46,56 20,28 20,60" fill="var(--logo-a)"/></g>
+</g>
+</svg>
       <span class="wm"><b>MEGA<em>MOTORS</em></b><small>Авто из США и Китая</small></span>
     </a>
     <nav class="main" aria-label="Разделы">
