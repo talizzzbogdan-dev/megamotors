@@ -341,7 +341,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <div class="seq-stick">
     <div class="outline" id="outline" aria-hidden="true" style="display:none">MEGAMOTORS</div>
     <video id="seqVideo" muted playsinline loop autoplay preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1" aria-hidden="true"></video>
-    <script>(function(){var v=document.getElementById("seqVideo"),m=matchMedia("(max-width: 720px)").matches;v.poster=m?"poster/hero-m.webp":"poster/hero.webp";v.src=m?"video/hero-m.mp4":"video/hero.mp4";v.muted=true;var p=v.play();if(p&&p.catch)p.catch(function(){});})();</script>
+    <script>(function(){var v=document.getElementById("seqVideo"),m=matchMedia("(max-width: 720px)").matches;v.poster=m?"poster/hero-m.webp":"poster/hero.webp";v.src=m?"video/hero-m.mp4":"video/hero.mp4";v.muted=true;v.defaultMuted=true;v.setAttribute("muted","");v.setAttribute("playsinline","");v.setAttribute("webkit-playsinline","");var p=v.play();if(p&&p.catch)p.catch(function(){});})();</script>
     <div class="wrap seq-in">
       <div class="chap on" data-i="0">
         <p class="eyebrow">США · Китай · Беларусь</p>
@@ -580,6 +580,10 @@ $("cYear").value = String(thisYear - 5);
   if (reduce) { v.removeAttribute("autoplay"); v.addEventListener("loadedmetadata", () => { v.currentTime = (v.duration || 19) * 0.3; }, { once: true }); }
   new IntersectionObserver(en => { visible = en[0].isIntersecting; if (visible) play(); else v.pause(); }, { threshold: 0 }).observe(sec);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) play(); });
+  // phones in power-saving mode may block autoplay: retry when the video is ready and on the first touch
+  v.addEventListener("loadeddata", play); v.addEventListener("canplay", play);
+  ["touchend", "pointerdown", "click", "keydown"].forEach(ev => addEventListener(ev, function once() { if (v.paused) play(); else removeEventListener(ev, once); }, { passive: true }));
+  let tries = 0; const t = setInterval(() => { if (!v.paused || ++tries > 8) clearInterval(t); else play(); }, 800);
 })();
 
 /* ---------- catalog ---------- */
