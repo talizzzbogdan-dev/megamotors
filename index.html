@@ -111,7 +111,7 @@ nav.main a:hover { color: var(--text); }
 .seq { position: relative; padding: 0; }
 .seq-stick { position: relative; height: calc(100svh - 72px); min-height: 560px; overflow: hidden; background: radial-gradient(900px 520px at 70% 48%, rgba(47,107,255,.2), transparent 62%), linear-gradient(180deg, var(--hero-top), var(--bg)); }
 .seq-stick { --bg: #060708; --text: #f2f4f7; --muted: #8a93a1; --accent-soft: #7aa5ff; --lead: #aab3c0; --line-2: #2a323c; --ghost: rgba(255,255,255,.06); --ghost-h: rgba(255,255,255,.12); --outline: rgba(122,165,255,.22); color: var(--text); background: #060708; }
-.seq-stick video { pointer-events: none; user-select: none; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 100% 50%; transform: scale(.94); transform-origin: 100% 50%; will-change: contents; }
+.seq-stick video, .seq-stick #seqFb { pointer-events: none; user-select: none; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 100% 50%; transform: scale(.94); transform-origin: 100% 50%; will-change: contents; }
 .seq-stick::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6,7,8,.82) 0%, rgba(6,7,8,.35) 42%, transparent 62%), linear-gradient(270deg, #060708 0%, transparent 9%), linear-gradient(180deg, #060708 14%, transparent 34%, transparent 68%, #060708 90%); pointer-events: none; }
 .seq-in, .seq-nav { z-index: 3; } .seq-nav { pointer-events: none; }
 .seq .outline { top: 48%; }
@@ -127,7 +127,7 @@ nav.main a:hover { color: var(--text); }
 .seq-nav span.on { background: var(--accent); }
 .seq-nav b { font-weight: 500; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-left: 10px; }
 @media (max-width: 900px) {
-  .seq-stick video { height: 40%; object-fit: cover; object-position: 50% 50%; transform: none; -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent); mask-image: linear-gradient(180deg, #000 80%, transparent); -webkit-mask-composite: source-over; mask-composite: add; }
+  .seq-stick video, .seq-stick #seqFb { height: 40%; object-fit: cover; object-position: 50% 50%; transform: none; -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent); mask-image: linear-gradient(180deg, #000 80%, transparent); -webkit-mask-composite: source-over; mask-composite: add; }
   .seq-stick::after { background: linear-gradient(180deg, transparent 38%, rgba(6,7,8,.9) 60%); }
   .seq .outline { top: 22%; }
   .chap { top: auto; bottom: 64px; transform: translateY(14px); left: 22px; right: 22px; }
@@ -271,7 +271,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 @media (max-width: 720px) {
   /* one composition: the car sits behind the headline, text floats over it */
   .seq-stick { height: 560px; min-height: 0; }
-  .seq-stick video { left: 50%; right: auto; top: 10%; bottom: auto; width: 168%; height: auto; aspect-ratio: 1470 / 630; object-fit: contain; transform: translateX(-50%); -webkit-mask-image: none; mask-image: none; }
+  .seq-stick video, .seq-stick #seqFb { left: 50%; right: auto; top: 10%; bottom: auto; width: 168%; height: auto; aspect-ratio: 1470 / 630; object-fit: contain; transform: translateX(-50%); -webkit-mask-image: none; mask-image: none; }
   .seq-stick::after { background: linear-gradient(180deg, #060708 0%, #060708 11%, rgba(6,7,8,0) 27%, rgba(6,7,8,0) 38%, rgba(6,7,8,.97) 62%, #060708 100%), radial-gradient(60% 40% at 50% 36%, rgba(47,107,255,.16), transparent 70%); }
   .seq-in { height: 100%; }
   .chap { top: auto; bottom: 26px; left: 22px; right: 22px; }
@@ -290,6 +290,10 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   .btn, button, select, input { min-height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .ticker-track { animation: none; } .lot-img img, .btn { transition: none; } }
+video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
+video::-webkit-media-controls, video::-webkit-media-controls-panel, video::-webkit-media-controls-overlay-play-button { display: none !important; }
+#seqFb { display: none; }
+.seq-stick.fb video { display: none; } .seq-stick.fb #seqFb { display: block; }
 </style>
 </head>
 <body>
@@ -341,6 +345,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <div class="seq-stick">
     <div class="outline" id="outline" aria-hidden="true" style="display:none">MEGAMOTORS</div>
     <video id="seqVideo" muted playsinline loop autoplay preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1" aria-hidden="true"></video>
+    <canvas id="seqFb" width="720" height="309" aria-hidden="true"></canvas>
     <script>(function(){var v=document.getElementById("seqVideo"),m=matchMedia("(max-width: 720px)").matches,c=navigator.connection||{},slow=!!(c.saveData||/(^|-)(slow-2g|2g|3g)$/.test(c.effectiveType||"")),w=Math.max(innerWidth,0);
 /* quality tiers, like adaptive streaming: low for slow links / data saver, mid for phones and small screens, high for desktops */
 var tier=slow?"hero-low":(m||w<1100)?"hero-m":"hero";
@@ -588,6 +593,19 @@ $("cYear").value = String(thisYear - 5);
   // phones in power-saving mode may block autoplay: retry when the video is ready and on the first touch
   v.addEventListener("loadeddata", play); v.addEventListener("canplay", play);
   ["touchend", "pointerdown", "click", "keydown"].forEach(ev => addEventListener(ev, function once() { if (v.paused) play(); else removeEventListener(ev, once); }, { passive: true }));
+  // fallback for phones that refuse video autoplay (iOS low power mode): light canvas sweep from 64 small frames
+  const stick = v.parentElement, fb = $("seqFb"), fctx = fb.getContext("2d"), FN = 64, fimgs = []; let fbOn = false, fph = 0, flast = 0;
+  function fbTick(now) {
+    if (!fbOn) return; requestAnimationFrame(fbTick);
+    const dt = Math.min(0.05, (now - flast) / 1000); flast = now; if (!visible) return;
+    fph += Math.PI / 9.5 * dt; const pos = (FN - 1) * (0.5 - 0.5 * Math.cos(fph)), i0 = Math.floor(pos), a = pos - i0, A = fimgs[i0], B = fimgs[Math.min(FN - 1, i0 + 1)];
+    if (!A || !A.complete || !A.naturalWidth) return; fctx.globalAlpha = 1; fctx.drawImage(A, 0, 0, 720, 309);
+    if (a > 0.02 && B && B.complete && B.naturalWidth) { fctx.globalAlpha = a; fctx.drawImage(B, 0, 0, 720, 309); }
+  }
+  function startFb() { if (fbOn || reduce || !v.paused) return; fbOn = true; for (let i = 0; i < FN; i++) { const im = new Image(); im.src = "fb/f" + String(i).padStart(2, "0") + ".webp"; fimgs.push(im); } stick.classList.add("fb"); flast = performance.now(); requestAnimationFrame(fbTick); }
+  function stopFb() { if (!fbOn) return; fbOn = false; stick.classList.remove("fb"); }
+  v.addEventListener("playing", stopFb);
+  setTimeout(startFb, 1800);
   let tries = 0; const t = setInterval(() => { if (!v.paused || ++tries > 8) clearInterval(t); else play(); }, 800);
 })();
 
