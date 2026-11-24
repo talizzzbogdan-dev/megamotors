@@ -263,6 +263,24 @@ details p { color: var(--muted); padding-bottom: 20px; font-size: 15px; }
 .closing p { color: var(--muted); margin-bottom: 28px; }
 footer { border-top: 1px solid var(--line); padding: 28px 0 44px; color: var(--muted); font-size: 14px; }
 footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
+
+/* ---------- phones ---------- */
+@media (max-width: 720px) {
+  .seq-stick canvas { height: auto; aspect-ratio: 1470 / 630; top: 10px; bottom: auto; object-fit: contain; transform: scale(1.14); transform-origin: 50% 40%; -webkit-mask-image: none; mask-image: none; }
+  .seq-stick::after { background: linear-gradient(180deg, transparent 22%, rgba(6,7,8,.92) 40%); }
+  .seq-nav { display: none; }
+  .seq-stick { min-height: 640px; }
+}
+@media (max-width: 620px) {
+  .cards4[style] { grid-template-columns: 1fr !important; }
+  .form2 { grid-template-columns: 1fr; }
+  .filters { grid-template-columns: 1fr 1fr; }
+  .filters > :nth-child(n+5) { grid-column: 1 / -1; }
+  .grid { gap: 14px; }
+  .lot-img { aspect-ratio: 16 / 6; }
+  .ph span { font-size: 16px; } .ph small { display: none; }
+  .btn, button, select, input { min-height: 44px; }
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .ticker-track { animation: none; } .lot-img img, .btn { transition: none; } }
 </style>
 <script>try{var __t=localStorage.getItem('mm-theme');if(__t==='light'||__t==='dark')document.documentElement.setAttribute('data-mm',__t)}catch(e){}</script>
@@ -543,10 +561,11 @@ $("cYear").value = String(thisYear - 5);
 
 /* ---------- hero: looping playback (forward / back), drag or move the mouse to rotate by hand ---------- */
 (function seqHero() {
-  const FR = 192, sec = $("seq"), cv = $("seqCanvas"), ctx = cv.getContext("2d");
+  const MOB = matchMedia("(max-width: 720px)").matches, FR = MOB ? 96 : 192, sec = $("seq"), cv = $("seqCanvas"), ctx = cv.getContext("2d");
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (MOB) { cv.width = 800; cv.height = 343; }
   const imgs = [], bmps = []; let ready = 0;
-  for (let i = 0; i < FR; i++) { const im = new Image(); im.decoding = "async"; im.onload = () => { ready++; if (window.createImageBitmap) createImageBitmap(im).then(b => { bmps[i] = b; }).catch(() => {}); }; im.src = "frames/f" + String(i).padStart(3, "0") + ".webp"; imgs.push(im); }
+  for (let i = 0; i < FR; i++) { const im = new Image(); im.decoding = "async"; im.onload = () => { ready++; if (window.createImageBitmap) createImageBitmap(im).then(b => { bmps[i] = b; }).catch(() => {}); }; im.src = (MOB ? "frames/m/f" : "frames/f") + String(i).padStart(3, "0") + ".webp"; imgs.push(im); }
   function draw(pos) {
     const i0 = Math.min(FR - 1, Math.max(0, Math.floor(pos))), a = pos - Math.floor(pos), i1 = Math.min(FR - 1, i0 + 1);
     const A = bmps[i0] || imgs[i0], B = bmps[i1] || imgs[i1];
