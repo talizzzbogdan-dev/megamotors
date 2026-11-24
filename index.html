@@ -111,7 +111,7 @@ nav.main a:hover { color: var(--text); }
 .seq { position: relative; padding: 0; }
 .seq-stick { position: relative; height: calc(100svh - 72px); min-height: 560px; overflow: hidden; background: radial-gradient(900px 520px at 70% 48%, rgba(47,107,255,.2), transparent 62%), linear-gradient(180deg, var(--hero-top), var(--bg)); }
 .seq-stick { --bg: #060708; --text: #f2f4f7; --muted: #8a93a1; --accent-soft: #7aa5ff; --lead: #aab3c0; --line-2: #2a323c; --ghost: rgba(255,255,255,.06); --ghost-h: rgba(255,255,255,.12); --outline: rgba(122,165,255,.22); color: var(--text); background: #060708; }
-.seq-stick video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 100% 50%; transform: scale(.94); transform-origin: 100% 50%; will-change: contents; }
+.seq-stick video { pointer-events: none; user-select: none; position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: 100% 50%; transform: scale(.94); transform-origin: 100% 50%; will-change: contents; }
 .seq-stick::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6,7,8,.82) 0%, rgba(6,7,8,.35) 42%, transparent 62%), linear-gradient(270deg, #060708 0%, transparent 9%), linear-gradient(180deg, #060708 14%, transparent 34%, transparent 68%, #060708 90%); pointer-events: none; }
 .seq-in, .seq-nav { z-index: 3; } .seq-nav { pointer-events: none; }
 .seq .outline { top: 48%; }
@@ -340,7 +340,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 <section class="seq" id="seq" aria-label="Megamotors">
   <div class="seq-stick">
     <div class="outline" id="outline" aria-hidden="true" style="display:none">MEGAMOTORS</div>
-    <video id="seqVideo" muted playsinline loop autoplay preload="auto" disablepictureinpicture aria-label="Автомобиль, можно повернуть мышью или пальцем"></video>
+    <video id="seqVideo" muted playsinline loop autoplay preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1" aria-hidden="true"></video>
     <script>(function(){var v=document.getElementById("seqVideo"),m=matchMedia("(max-width: 720px)").matches;v.poster=m?"poster/hero-m.webp":"poster/hero.webp";v.src=m?"video/hero-m.mp4":"video/hero.mp4";v.muted=true;var p=v.play();if(p&&p.catch)p.catch(function(){});})();</script>
     <div class="wrap seq-in">
       <div class="chap on" data-i="0">
@@ -572,22 +572,13 @@ const years = []; for (let y = thisYear; y >= thisYear - 12; y--) years.push(y);
 fillSel($("fMake"), makes, "Все марки"); fillSel($("fYear"), years, "Любой"); fillSel($("fDmg"), dmgs, "Любое"); fillSel($("cYear"), years);
 $("cYear").value = String(thisYear - 5);
 
-/* ---------- hero: looping video (eased sweep baked in), drag or swipe to rotate by hand ---------- */
+/* ---------- hero: looping video (eased sweep baked in) ---------- */
 (function seqHero() {
   const sec = $("seq"), v = $("seqVideo"), reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const TAU = Math.PI * 2;
-  let drag = false, dx0 = 0, p0 = 0, visible = true, resumeTimer = 0;
-  const D = () => v.duration || 19;
-  const posOf = () => 0.5 - 0.5 * Math.cos(TAU * (v.currentTime % D()) / D());          // 0..1 front to back
-  const timeOf = p => D() * Math.acos(Math.max(-1, Math.min(1, 1 - 2 * p))) / TAU;       // forward half of the sweep
-  const play = () => { if (!reduce && visible && !drag) { const r = v.play(); if (r && r.catch) r.catch(() => {}); } };
-  if (reduce) { v.removeAttribute("autoplay"); v.addEventListener("loadedmetadata", () => { v.currentTime = timeOf(0.78); }, { once: true }); }
+  let visible = true;
+  const play = () => { if (!reduce && visible) { const r = v.play(); if (r && r.catch) r.catch(() => {}); } };
+  if (reduce) { v.removeAttribute("autoplay"); v.addEventListener("loadedmetadata", () => { v.currentTime = (v.duration || 19) * 0.3; }, { once: true }); }
   new IntersectionObserver(en => { visible = en[0].isIntersecting; if (visible) play(); else v.pause(); }, { threshold: 0 }).observe(sec);
-  v.style.cursor = "grab"; v.style.touchAction = "pan-y";
-  v.addEventListener("pointerdown", e => { drag = true; clearTimeout(resumeTimer); v.pause(); dx0 = e.clientX; p0 = posOf(); v.setPointerCapture(e.pointerId); v.style.cursor = "grabbing"; });
-  v.addEventListener("pointermove", e => { if (!drag) return; const p = Math.max(0, Math.min(1, p0 + (e.clientX - dx0) / v.clientWidth * 0.9)); v.currentTime = timeOf(p); });
-  const up = () => { if (!drag) return; drag = false; v.style.cursor = "grab"; resumeTimer = setTimeout(play, 1200); };
-  v.addEventListener("pointerup", up); v.addEventListener("pointercancel", up);
   document.addEventListener("visibilitychange", () => { if (!document.hidden) play(); });
 })();
 
