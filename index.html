@@ -341,7 +341,12 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <div class="seq-stick">
     <div class="outline" id="outline" aria-hidden="true" style="display:none">MEGAMOTORS</div>
     <video id="seqVideo" muted playsinline loop autoplay preload="auto" disablepictureinpicture disableremoteplayback tabindex="-1" aria-hidden="true"></video>
-    <script>(function(){var v=document.getElementById("seqVideo"),m=matchMedia("(max-width: 720px)").matches;v.poster=m?"poster/hero-m.webp":"poster/hero.webp";v.src=m?"video/hero-m.mp4":"video/hero.mp4";v.muted=true;v.defaultMuted=true;v.setAttribute("muted","");v.setAttribute("playsinline","");v.setAttribute("webkit-playsinline","");var p=v.play();if(p&&p.catch)p.catch(function(){});})();</script>
+    <script>(function(){var v=document.getElementById("seqVideo"),m=matchMedia("(max-width: 720px)").matches,c=navigator.connection||{},slow=!!(c.saveData||/(^|-)(slow-2g|2g|3g)$/.test(c.effectiveType||"")),w=Math.max(innerWidth,0);
+/* quality tiers, like adaptive streaming: low for slow links / data saver, mid for phones and small screens, high for desktops */
+var tier=slow?"hero-low":(m||w<1100)?"hero-m":"hero";
+v.poster=m?"poster/hero-m.webp":"poster/hero.webp";v.preload=slow?"metadata":"auto";
+v.addEventListener("error",function(){var f=v.getAttribute("data-fb");if(f!=="1"&&tier!=="hero-low"){v.setAttribute("data-fb","1");v.src="video/hero-low.mp4";v.load();}});
+v.src="video/"+tier+".mp4";v.muted=true;v.defaultMuted=true;v.setAttribute("muted","");v.setAttribute("playsinline","");v.setAttribute("webkit-playsinline","");var p=v.play();if(p&&p.catch)p.catch(function(){});})();</script>
     <div class="wrap seq-in">
       <div class="chap on" data-i="0">
         <p class="eyebrow">США · Китай · Беларусь</p>
